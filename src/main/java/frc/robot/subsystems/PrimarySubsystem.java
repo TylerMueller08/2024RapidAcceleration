@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.List;
 
-import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import com.ctre.phoenix6.CANBus;
@@ -20,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 
 public class PrimarySubsystem extends SubsystemBase {
+
+    private final VisionSubsystem visionSubsystem;
 
     private final CANSparkMax leftGearbox1 = NeckConstants.leftGearbox1;
     private final CANSparkMax leftGearbox2 = NeckConstants.leftGearbox2;
@@ -45,8 +46,6 @@ public class PrimarySubsystem extends SubsystemBase {
 
     private final PIDController neckRotateController = new PIDController(0.0, 0.0, 0.0);
 
-    PhotonCamera camera = new PhotonCamera("Camera_Module_v1");
-
     private boolean manualControlEnabled = false;
     private boolean shooterTimerStarted = false;
     private boolean intakeIntaked = false;
@@ -63,6 +62,10 @@ public class PrimarySubsystem extends SubsystemBase {
     private final Spark siccLEDS = LEDConstants.SiccLEDs;
 
     private int neckGoalAngle = 0;
+
+    public PrimarySubsystem(VisionSubsystem visionSubsystem) {
+        this.visionSubsystem = visionSubsystem;
+    }
 
     public void IntakePosition() { if (!manualControlEnabled) { currentNeckState = NeckStates.INTAKE; subwooferPositionSet = false; }}
     public void SubwooferPosition() { if (!manualControlEnabled) { currentNeckState = NeckStates.SUBWOOFER; }}
@@ -86,7 +89,7 @@ public class PrimarySubsystem extends SubsystemBase {
     public void periodic() {
         primaryNeckEncoderValue = primaryNeckEncoder.get() / -2;
         
-        camera.setLED(VisionLEDMode.kOff);
+        visionSubsystem.returnCamera().setLED(VisionLEDMode.kOff);
 
         SmartDashboard.putNumber("MatchTimeRemaining", Math.round(DriverStation.getMatchTime()));
         SmartDashboard.putNumber("CANBusUtilization", Math.round(CANInfo.BusUtilization * 100));
@@ -142,13 +145,13 @@ public class PrimarySubsystem extends SubsystemBase {
                 neckGoalAngle = 40;
                 break;
             case VISION:
-                if (camera.getLatestResult().hasTargets()) {
-                    List<PhotonTrackedTarget> targets = camera.getLatestResult().getTargets();
+                if (visionSubsystem.returnCamera().getLatestResult().hasTargets()) {
+                    List<PhotonTrackedTarget> targets = visionSubsystem.returnCamera().getLatestResult().getTargets();
                     for (PhotonTrackedTarget target : targets) {
                         int targetID = target.getFiducialId();
                         if (targetID == 4 || targetID == 7) {
-                            double distanceX = camera.getLatestResult().getBestTarget().getBestCameraToTarget().getX();
-                            double distanceY = camera.getLatestResult().getBestTarget().getBestCameraToTarget().getY();
+                            double distanceX = visionSubsystem.returnCamera().getLatestResult().getBestTarget().getBestCameraToTarget().getX();
+                            double distanceY = visionSubsystem.returnCamera().getLatestResult().getBestTarget().getBestCameraToTarget().getY();
                             double distanceHypo = Math.hypot(distanceX, distanceY);
                             neckGoalAngle = VisionSetAngle(distanceHypo);
                         }
@@ -365,9 +368,5 @@ public class PrimarySubsystem extends SubsystemBase {
         beakIntakeMotor.set(0.0);
         shooterTopMotor.set(0.0);
         shooterBottomMotor.set(0.0);
-    }
-
-    public PhotonCamera returnCamera() {
-        return camera;
     }
 }

@@ -29,11 +29,13 @@ import java.io.File;
  */
 public class RobotContainer
 {
+  // Subsystems
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-
+  private final VisionSubsystem visionSubsystem = new VisionSubsystem(drivebase);
+  private final PrimarySubsystem primarySubsystem = new PrimarySubsystem(visionSubsystem);
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
-  private final PrimarySubsystem primarySubsystem = new PrimarySubsystem();
 
+  // Controllers
   private final CommandXboxController driverXbox = new CommandXboxController(0);
   private final CommandXboxController auxXbox = new CommandXboxController(1);
 
@@ -61,7 +63,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRightX() * 0.95,
         () -> driverXbox.start().getAsBoolean(),
-        primarySubsystem.returnCamera()
+        visionSubsystem.returnCamera()
     );
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityAprilTagAlignment);
