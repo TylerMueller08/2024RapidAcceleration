@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -27,11 +28,19 @@ public class VisionSubsystem extends SubsystemBase {
         // Results should be relative of the blue alliance driverstation wall
         Pose2d robotPose = swerveSubsystem.getPose();
 
+        double swerveXPosition = robotPose.getX();
+        double swerveYPosition = robotPose.getY();
+        double swerveRotation = robotPose.getRotation().getDegrees();
+
         System.out.println("<--------------->");
-        System.out.println("Swerve X Position: " + robotPose.getX());
-        System.out.println("Swerve Y Position: " + robotPose.getY());
-        System.out.println("Swerve Rotation: " + robotPose.getRotation().getDegrees());
+        System.out.println("Swerve X Position: " + swerveXPosition);
+        System.out.println("Swerve Y Position: " + swerveYPosition);
+        System.out.println("Swerve Rotation: " + swerveRotation);
         System.out.println("<--------------->");
+
+        SmartDashboard.putNumber("FieldXPosition", swerveXPosition);
+        SmartDashboard.putNumber("FieldYPosition", swerveYPosition);
+        SmartDashboard.putNumber("FieldRotation", swerveRotation);
     }
 
     private void estimateLocalPose() {

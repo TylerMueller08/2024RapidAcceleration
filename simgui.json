@@ -194,6 +194,36 @@
       },
       "open": true
     },
+    "ntcore-ts-1718038680880@1": {
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "ntcore-ts-1718039149071@1": {
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "ntcore-ts-1718054886206@1": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "ntcore-ts-1718055281575@1": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
     "visible": true
   },
   "NetworkTables View": {
