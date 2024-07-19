@@ -52,12 +52,12 @@ public class PrimarySubsystem extends SubsystemBase {
     private boolean subwooferPositionSet = false;
     private boolean shotFirstNote = false;
     private boolean downTimerStarted = false;
-    private boolean autoTimerStarted = false;
+    // private boolean autoTimerStarted = false;
     private boolean encoderFailureDetected = false;
 
     private Timer shooterTimer = new Timer();
     private Timer downTimer = new Timer();
-    private Timer autoTimer = new Timer();
+    // private Timer autoTimer = new Timer();
 
     private final Spark siccLEDS = LEDConstants.SiccLEDs;
 
@@ -104,20 +104,20 @@ public class PrimarySubsystem extends SubsystemBase {
         SmartDashboard.putNumber("SecondaryEncoderValue", secondaryNeckEncoder.get());
         SmartDashboard.putBoolean("BottomLimitSwitchValue", !bottomLimitSwitch.get());
         SmartDashboard.putBoolean("TopLimitSwitchValue", !topLimitSwitch.get());
-        SmartDashboard.putBoolean("IntakeLimitSwitchValue", intakeLimitSwitch.get());
+        SmartDashboard.putBoolean("IntakeLimitSwitchValue", !intakeLimitSwitch.get());
 
         autoName = SmartDashboard.getString("AutoSelector", "DoNothing");
 
-        if (!autoTimerStarted && primaryNeckEncoderValue > 10) {
-            autoTimer.start();
-            autoTimerStarted = true;
-        } else if (autoTimerStarted && autoTimer.get() >= 15) {
-            autoTimer.stop();
-            if (!shooterTimerStarted && shotFirstNote) {
-                shooterTopMotor.set(0.15);
-                shooterBottomMotor.set(0.15);
-            }
-        }
+        // if (!autoTimerStarted && primaryNeckEncoderValue > 10) {
+        //     autoTimer.start();
+        //     autoTimerStarted = true;
+        // } else if (autoTimerStarted && autoTimer.get() >= 15) {
+        //     autoTimer.stop();
+        //     if (!shooterTimerStarted && shotFirstNote) {
+        //         shooterTopMotor.set(0.15);
+        //         shooterBottomMotor.set(0.15);
+        //     }
+        // }
 
         ManageNeckStates();
         UpdatePIDConstants();
